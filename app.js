@@ -1,49 +1,40 @@
-// importing modules
+require("dotenv").config();
+require("express-async-errors");
+const connectdb = require("./db/connectdb");
 const express = require("express");
-const dotenv = require("dotenv");
-const db = require("./connectdb");
+const app = express();
 const mainRouter = require("./routes/agronome");
+
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
-// intialising the environment
-const app = express();
-dotenv.config();
+
+// middleware
+app.use(express.static("./public"));
+app.use(express.json());
+app.use("/agronome", mainRouter);
+
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-app.use(express.json());
-app.get("/", (req, res) => {
-  res.send("<h1>hello world</h1>");
-});
-// logic
+const port = process.env.PORT || 3000;
 
-app.use("/Ing-Agronome/v1", mainRouter);
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-db.connect((err) => {
-  if (err) {
-    console.log(err);
+connectdb.connect((error) => {
+  if (error) {
+    console.log(error);
   } else {
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
-    console.log("connection succefull");
+    console.log("connection successfull");
   }
 });
 
-// starting and configuring server port
-
-const port = process.env.PORT || 3000;
+// connectdb.query("SELECT * FROM agronome", (error, results, fields) => {
+//   if (error) {
+//     throw error;
+//   } else {
+//     // console.log("This solution is:", results[1]);
+//     const info = results[1];
+//     console.log(info);
+//   }
+// });
