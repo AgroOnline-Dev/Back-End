@@ -1,5 +1,5 @@
 // importing modules
-const db = require("../db/connectdb");
+const db = require("../Model/connectdb");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const CustomAPIError = require("../errors/custom-error");
@@ -14,7 +14,7 @@ const signup = async (req, res) => {
   //   normally we are supposed to send back in the payload the id of the user, but since for now i've not yet made the connection to the db, i'm just going to return the email and a dummy id of the person since it is even a unique info
 
   // add a normal id later
-  const id = 13;
+  const id = 15;
 
   const salt = await bcrypt.genSalt(10);
   console.log(salt);
@@ -27,18 +27,18 @@ const signup = async (req, res) => {
     expiresIn: "30d",
   });
 
-  db.query(
-    "INSERT INTO agronome SET ?",
-    { id: id, name: name, email: email, password: password },
-    (error, results, fields) => {
-      if (error) {
-        throw error;
-      } else {
-        console.log(results);
-        console.log("successfull");
-      }
-    }
-  );
+  // db.query(
+  //   "INSERT INTO agronome SET ?",
+  //   { name: name, email: email, password: hashedPassword },
+  //   (error, results, fields) => {
+  //     if (error) {
+  //       throw error;
+  //     } else {
+  //       console.log(results);
+  //       console.log("successfull");
+  //     }
+  //   }
+  // );
 
   //   db.query("SELECT * FROM agronome", (error, results, fields) => {
   //     if (error) {

@@ -1,6 +1,6 @@
 require("dotenv").config();
 require("express-async-errors");
-const connectdb = require("./db/connectdb");
+const connectdb = require("./Model/connectdb");
 const express = require("express");
 const app = express();
 const mainRouter = require("./routes/agronome");
