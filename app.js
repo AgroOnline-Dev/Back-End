@@ -3,14 +3,15 @@ require("express-async-errors");
 const connectdb = require("./Model/connectdb");
 const express = require("express");
 const app = express();
-const mainRouter = require("./routes/agronome");
+const mainRouter = require("./routes/agronomeRouteSigninSignup");
 
+// error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 
-// middleware
-app.use(express.static("./public"));
 app.use(express.json());
+
+// routes
 app.use("/agronome", mainRouter);
 
 app.use(notFoundMiddleware);
@@ -25,16 +26,5 @@ connectdb.connect((error) => {
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
-    console.log("connection successfull");
   }
 });
-
-// connectdb.query("SELECT * FROM agronome", (error, results, fields) => {
-//   if (error) {
-//     throw error;
-//   } else {
-//     // console.log("This solution is:", results[1]);
-//     const info = results[1];
-//     console.log(info);
-//   }
-// });
