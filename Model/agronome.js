@@ -24,6 +24,9 @@ const getAllAgronome = async () => {
   });
 };
 
+// const a = getAllAgronome();
+// console.log(a);
+
 //   db.query(
 //     "SELECT email FROM agronome WHERE email = ? ",
 //     [email],
