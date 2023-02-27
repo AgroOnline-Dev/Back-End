@@ -15,7 +15,7 @@ const signUpMiddleware = async (req, res, next) => {
         if (results.length > 0) {
           return res
             .status(StatusCodes.CONFLICT)
-            .json({ msg: `user with email ${email} already exist  ` });
+            .json({ msg: `user with email ${email} already exists  ` });
         } else {
           const salt = await bcrypt.genSalt(10);
           const hashedPassword = await bcrypt.hash(password, salt);
