@@ -24,18 +24,4 @@ const getAllAgronome = async () => {
   });
 };
 
-//   db.query(
-//     "SELECT email FROM agronome WHERE email = ? ",
-//     [email],
-//     (error, result) => {
-//       if (error) {
-//         console.log(error);
-//       } else {
-//         if (result.length > 0) {
-//           return res.json({ msg: `user with email ${email} already exist  ` });
-//         }
-//       }
-//     }
-//   );
-
 module.exports = { addAgronome, getAllAgronome };

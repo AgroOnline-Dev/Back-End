@@ -30,7 +30,38 @@ const signin = async (req, res) => {
   });
 };
 
+const profile = async (req, res) => {
+  let sampleFile;
+  let uploadPath;
+  // checking if a file has been uploaded or not
+  if (!req.files || Object.keys(req.files).length === 0) {
+    // res.send("error");
+    throw new BadRequest("No file was uploaded");
+  }
+  // obtaining uploaded file to save it
+  sampleFile = req.files.sampleFile;
+  uploadPath = __dirname + "/upload/" + sampleFile.name;
+  sampleFile.mv(uploadPath, (err) => {
+    if (err) {
+      // throw new BadRequest("Unknown Error");
+      return res.send(err);
+    }
+    db.query(
+      'UPDATE userprofile SET profile_image = ? WHERE id ="1"',
+      [sampleFile.name],
+      (err, rows) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send("file uploaded succesfully");
+        }
+      }
+    );
+  });
+};
+
 module.exports = {
   signin,
   signup,
+  profile,
 };
