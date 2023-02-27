@@ -30,6 +30,7 @@ const signin = async (req, res) => {
   });
 };
 
+// controller to modify user profile
 const profile = async (req, res) => {
   let sampleFile;
   let uploadPath;
@@ -60,8 +61,22 @@ const profile = async (req, res) => {
   });
 };
 
+// controller to view all agricultures under an agronomist with their appreciations
+
+const agriculturers = async (req, res) => {
+  db.query("SELECT * FROM agriculturer", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(result);
+      res.send(result);
+    }
+  });
+};
+
 module.exports = {
   signin,
   signup,
   profile,
+  agriculturers,
 };
