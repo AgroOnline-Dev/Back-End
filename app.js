@@ -1,49 +1,33 @@
-// importing modules
+require("dotenv").config();
+require("express-async-errors");
+const fileUpload = require("express-fileupload");
+const connectdb = require("./Model/connectdb");
 const express = require("express");
-const dotenv = require("dotenv");
-const db = require("./connectdb");
-const mainRouter = require("./routes/agronome");
+const app = express();
+const mainRouter = require("./routes/agronomeRoute");
+
+// error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
-// intialising the environment
-const app = express();
-dotenv.config();
+
+app.use(express.json());
+// default option for file upload
+app.use(fileUpload());
+// routes
+
+app.use("/agronome", mainRouter);
+
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-app.use(express.json());
-app.get("/", (req, res) => {
-  res.send("<h1>hello world</h1>");
-});
-// logic
+const port = process.env.PORT || 3001;
 
-app.use("/Ing-Agronome/v1", mainRouter);
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-db.connect((err) => {
-  if (err) {
-    console.log(err);
+connectdb.connect((error) => {
+  if (error) {
+    console.log(error);
   } else {
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
-    console.log("connection succefull");
   }
 });
-
-// starting and configuring server port
-
-const port = process.env.PORT || 3000;
