@@ -1,5 +1,6 @@
 require("dotenv").config();
 require("express-async-errors");
+const cors = require("cors");
 const fileUpload = require("express-fileupload");
 const connectdb = require("./Model/connectdb");
 const express = require("express");
@@ -10,7 +11,7 @@ const agriculturerRouter = require("./routes/agriculteurRoute");
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
-
+app.use(cors());
 app.use(express.json());
 // default option for file upload
 app.use(fileUpload());
