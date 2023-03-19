@@ -7,14 +7,14 @@ const { StatusCodes } = require("http-status-codes");
 const db = require("../Model/connectdb");
 
 const signup = async (req, res) => {
-  const { name, email } = req.body;
+  const { name, email, speciality, experience } = req.body;
   const password = req.password;
   const token = req.token;
   if (!email || !password || !name) {
     throw new BadRequest("Please provide name, email and password");
   }
 
-  addAgronome(name, email, password);
+  addAgronome(name, email, password, speciality, experience);
 
   res
     .status(StatusCodes.CREATED)
