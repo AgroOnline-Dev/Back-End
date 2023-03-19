@@ -18,5 +18,15 @@ const agronomes = async (req, res) => {
     }
   );
 };
+const ficheTechnique = async (req, res) => {
+  db.query("SELECT id,nom from fichestechniques", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(result);
+      res.send(result);
+    }
+  });
+};
 
-module.exports = agronomes;
+module.exports = { agronomes, ficheTechnique };
