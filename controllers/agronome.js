@@ -64,7 +64,7 @@ const profile = async (req, res) => {
 // controller to view all agricultures under an agronomist with their appreciations
 
 const agriculturers = async (req, res) => {
-  db.query("SELECT * FROM agriculturer", (err, result) => {
+  db.query("SELECT * FROM agriculteurs", (err, result) => {
     if (err) {
       console.log(err);
     } else {

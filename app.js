@@ -4,7 +4,8 @@ const fileUpload = require("express-fileupload");
 const connectdb = require("./Model/connectdb");
 const express = require("express");
 const app = express();
-const mainRouter = require("./routes/agronomeRoute");
+const router = require("./routes/agronomeRoute");
+const agriculturerRouter = require("./routes/agriculteurRoute");
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -15,7 +16,8 @@ app.use(express.json());
 app.use(fileUpload());
 // routes
 
-app.use("/agronome", mainRouter);
+app.use("/agronome", router);
+app.use("/agriculturer", agriculturerRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
