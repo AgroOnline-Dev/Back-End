@@ -1,6 +1,6 @@
 //imports
 const express = require("express");
-const db = require("./models/database");
+// const db = require("./models/database");
 const productsRoutes = require("./routes/products");
 const usersRoutes = require("./routes/users");
 const sellersRoutes = require("./routes/sellers");
@@ -62,14 +62,14 @@ const port = 5000 || process.env.PORT;
 //   }
 // });
 // Importation des modules
-const express = require("express"); // Importation du module Express
+// const express = require("express"); // Importation du module Express
 const con = require("./dbConnect");
-const cors = require("cors");
+// const cors = require("cors");
 const routesAgricult = require("./routes/agriculteursRoutes");
 const fs = require("fs");
 const http = require("http");
 const { Server } = require("socket.io");
-const path = require("path");
+// const path = require("path");
 const fileUpload = require("express-fileupload");
 
 // Instanciation du serveur express app
