@@ -1,4 +1,4 @@
-const db = require("../Model/connectdb");
+const db = require("../Model/db");
 
 const agronomes = async (req, res) => {
   db.query(
