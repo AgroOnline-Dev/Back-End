@@ -90,8 +90,12 @@ app.post("/adminDelete/:id", verificationToken, adminDelete);
     // RECHERCHE UTILISATEUR AVEC NOM OU PRENOM
     app.post("/userSearch", verificationToken, searchUsers.users);
 
-    // / SUPPRIMER USERS
+    // SUPPRIMER USERS
     app.post("/usersDelete/:id", verificationToken, deleteUsers.users);
+
+    // POUR LE SELLERS
+    // AFFICHE SELLERS
+    app.get("/sellersGestion", verificationToken, displayUsers.sellers)
 
     // POUR L'INVESTISSEUR
     // AFFICHER INVESTISEUR
