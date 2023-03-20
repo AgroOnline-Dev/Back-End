@@ -7,12 +7,6 @@ const agronomes = async (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        console.log(result);
-
-        // res
-        //   .status(StatusCodes.CREATED)
-        //   .json({ msg: `user ${name} with email ${email} created`, token });
-
         res.send(result);
       }
     }
@@ -23,10 +17,19 @@ const ficheTechnique = async (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log(result);
       res.send(result);
     }
   });
 };
 
-module.exports = { agronomes, ficheTechnique };
+const chat = async (req, res) => {
+  db.query("SELECT room, user,contenu  from messages", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+};
+
+module.exports = { agronomes, ficheTechnique, chat };

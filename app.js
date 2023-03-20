@@ -4,9 +4,26 @@ const cors = require("cors");
 const fileUpload = require("express-fileupload");
 const connectdb = require("./Model/connectdb");
 const express = require("express");
+const http = require("http");
 const app = express();
 const router = require("./routes/agronomeRoute");
 const agriculturerRouter = require("./routes/agriculteurRoute");
+const { Server } = require("socket.io");
+// initialisong server with http module and not express because of socket.io
+const server = http.createServer(app);
+
+// creating the io server
+const io = new Server(server);
+
+io.on("connection", (socket) => {
+  console.log("User Connected => " + socket.id);
+
+  // socket.on("EVENT")
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected", socket.id);
+  });
+});
 
 // error handler
 const notFoundMiddleware = require("./middleware/not-found");
@@ -29,7 +46,7 @@ connectdb.connect((error) => {
   if (error) {
     console.log(error);
   } else {
-    app.listen(port, () =>
+    server.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
   }
