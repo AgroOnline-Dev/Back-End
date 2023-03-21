@@ -128,8 +128,8 @@ app.post('/registerAsk', (req, res) => {
         hash.update(password);
         const hashedPassword = hash.digest('hex');
         const refUsers = 'Investisseur'
-        const newUser = [ nom,prenom,email,sexe,tel,region,besoin,hashedPassword ];
-        const requet = "INSERT INTO agro.investisseurs (nom,prenom,mail,sexe,tel,region,besoin,password) values (?,?,?,?,?,?,?,?)";
+        const newUser = [ nom,prenom,email,sexe,tel,region,hashedPassword ];
+        const requet = "INSERT INTO agro.investisseurs (nom,prenom,mail,sexe,tel,region,password) values (?,?,?,?,?,?,?)";
         //connexion.query(requet, [nom,prenom,email,sexe,tel,region,besoin,hashed],(err, results) => {
         connexion.query(requet, newUser, (error, results) => {
           if (error) {
@@ -147,28 +147,6 @@ app.post('/registerAsk', (req, res) => {
     console.log(status)
   }
 });
-    //   bcrypt.hash(password, 10, (error, hash) => {
-    //     if (error) {
-    //       console.log(error);
-    //       res.status(500).json({ message: 'Erreur lors du hashage du mot de passe' });
-    //     } else {
-    //       const passwordEncoded = Buffer.from(password, 'utf-8').toLocaleString('hex');
-    //       // Enregistrement de l'utilisateur dans la base de données
-    //       const requet = "INSERT INTO demandeurs (nom,prenom,mail,sexe,tel,region,besoin,password) values (?,?,?,?,?,?,?,?)";
-    //       connexion.query(requet, [nom,prenom,email,sexe,tel,region,besoin, passwordEncoded], (error, results) => {
-    //         if (error) {
-    //           console.log('c\'est ici :'+ error);
-    //           res.status(500).json({ message: 'Erreur lors de l\'enregistrement de l\'utilisateur' });
-    //         } else {
-    //           // res.status(200).json({message : 'Welcome '+ results});
-    //           res.status(201).json({ message: 'Utilisateur enregistré avec succès' });
-    //         }
-    //       });
-    //     }
-    //   });
-    // }
-//   });
-// });
 
 // Authentification d'un utilisateur
 // app.post('/login', (req, res) => {
