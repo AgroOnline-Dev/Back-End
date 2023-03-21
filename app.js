@@ -336,12 +336,7 @@ app.put('/update', async (req, res) => {
 
 // INVESTISSEURS
 
-// Route connexion
-// app.post('/login', (req, res) => {
-//   // Récupération des données de la requête
-//   const email = req.body.email;
-//   const passwordLogin = req.body.passwordIn;
-//   console.log('Your password typing is : ' + passwordLogin);
+
 
 //   if (!email || !passwordLogin) {
 //     console.log('Veillez entrer votre mail et mdp');
