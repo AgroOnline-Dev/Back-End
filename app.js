@@ -21,58 +21,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended : true}));
 app.use(bodyParser.json());
 
-// configuration de la clé secret
-// app.use(session({
-//   secret: 'secretKey',
-//   resave: false,
-//   saveUninitialized: true,
-//   cookie: {
-//     secure: false,
-//     maxAge: 1000 * 60 * 60 * 24 //session expire après 24h
-//   }
-// }))
-
-// app.use((req, res, next) => {
-//   const sessionId = req.cookies.sessionId;
-
-//   if (sessionId) {
-//       // session exists, continue with the request
-//       next();
-//   } else {
-//       // session does not exist, redirect to login page
-//       res.redirect('/login');
-//   }
-// });
 
 
 //BODY
-
-// INSCRIPTION DES UTILISATEURS
-// app.post('/registerAsk', async (req, res) => {
-
-//   const { nom,prenom,email,sexe,tel,region,besoin,password : password1 } = req.body //Recuperation des valeurs de axios
-//   // console.log(req)
-//   // const existingUser = await User.findOne({ email });
-//   //   if (existingUser) {
-//   //     return res.status(400).json({ message: 'L\'utilisateur existe déjà' });
-//   //   }
-//   //Hacher le mot de passe
-//   await bcrypt.hash(password1, 10, (err, hashed) => {
-//     if (err){
-//       console.log("impossible");
-//     }
-//     else{
-//       const requet = "INSERT INTO demandeurs (nom,prenom,mail,sexe,tel,region,besoin,password) values (?,?,?,?,?,?,?,?)";
-//       connexion.query(requet, [nom,prenom,email,sexe,tel,region,besoin,hashed],(err, results) => {
-//         if (err) throw err;
-//         console.log(results);
-//         res.status(200).json({message : 'Welcome '+ results.nom});
-//       })
-//       // connexion.end();
-//     }
-//   })
-// });
-
 
 
 // Inscription des utilisateurs
@@ -115,7 +66,7 @@ app.post('/registerAsk', (req, res) => {
     });
   }else if (status == 'Investisseur') 
   {// Inscription d'un utilisateur (demandeurs)
-    connexion.query('SELECT * FROM investisseurs WHERE mail = ?', [email], (error, results) => {
+    connexion.query('SELECT * FROM agro.investisseurs WHERE mail = ?', [email], (error, results) => {
       if (error) {
         console.log(error);
         res.status(500).json({ message: 'Erreur lors de la vérification de l\'utilisateur' });
@@ -148,50 +99,9 @@ app.post('/registerAsk', (req, res) => {
   }
 });
 
-// Authentification d'un utilisateur
-// app.post('/login', (req, res) => {
-//   const { email, password } = req.body;
+   
 
-//   // Recherche de l'utilisateur dans la base de données
-//   connexion.query('SELECT * FROM demandeurs WHERE mail = ?', [email], (error, results) => {
-//     if (error) {
-//       console.log(error);
-//       res.status(500).json({ message: 'Erreur lors de la recherche de l\'utilisateur' });
-//     } else if (results.length === 0) {
-//       res.status(402).json({ message: 'Adresse email ou mot de passe incorrect' });
-//     } else {
-//       const user = results[0];
-//       // console.log(user);
-
-//       // Comparaison du mot de passe saisi avec le mot de passe haché stocké dans la base de données
-//       bcrypt.compare(password, user.password, (error, result) => {
-//         if (error) {
-//           console.log(error);
-//           res.status(500).json({ message: 'Erreur lors de la comparaison des mots de passe' });
-//         } else {
-//           console.log(result);
-//         }if (result) {
-//           // Génération du token d'authentification
-//           const token = req.headers.authorization.split(' ')[1];
-//           jwt.verify(token, 'secret', (err, decodedToken) => {
-//         if (err) {
-//           res.status(401).json({ message: 'Token invalide' });
-//         } else {
-//           // Le token est valide, vous pouvez continuer l'exécution de votre code
-//           // decodedToken contient les données que vous avez encodées dans le token
-//           res.status(401).json({ message: 'Adresse email ou mot de passe incorrect' });
-//         }
-//       });
-//       }
-//     })
-        
-
-//   }
-//   });
-// });
-
-
-
+// Login login login login login login login
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   //Vérification si les champs sont remplis
@@ -201,14 +111,14 @@ app.post('/login', (req, res) => {
   connexion.query('SELECT * FROM agro.demandeurs WHERE mail = ?', email, (error, results) => {
     if (error) {
       console.log(error);
-      res.status(500).json({ message: 'Error finding user' });
+      res.status(500).json({message: 'Erreur lors de la recherche de l\'utilisateur' });
     } else if (results.length === 0) {
 
       // INVESTISSEMENT
   connexion.query('SELECT * FROM agro.investisseurs WHERE mail = ?', email, (error, results) => {
     if (error) {
       console.log(error);
-      res.status(500).json({ message: 'Error finding user' });
+      res.status(500).json({ message: 'Erreur lors de la recherche de l\'utilisateur'  });
     } else if (results.length === 0) {
       res.status(401).json({ message: 'Incorrect email or password' });
     } else {
@@ -231,7 +141,7 @@ app.post('/login', (req, res) => {
     }
     });
 
-    }    else {
+    }else {
       const user = results[0];
 
       // Hash the password with crypto and compare
@@ -258,9 +168,10 @@ app.post('/login', (req, res) => {
 // RECUPERER LES INFORMATIONS DE L'UTILISATEURS ET LES AFFICHES DANS DRAWER
 app.get('/demandeurs/:email', (req, res) => {
   let {email} = req.params;
+  console.log({email})
 
-  let requet1 = 'SELECT *FROM demandeurs WHERE mail=?';
-  let requet2 = 'SELECT *FROM investisseurs WHERE mail=?';
+  let requet1 = 'SELECT *FROM agro.demandeurs WHERE mail=?';
+  let requet2 = 'SELECT *FROM agro.investisseurs WHERE mail=?';
 
   connexion.query(requet1, [email], (error, results) => {
     if (error) {
@@ -272,9 +183,11 @@ app.get('/demandeurs/:email', (req, res) => {
           console.log(error)
           res.status(500).json({message : 'erreur de récuperation des données'})
         } else {
+          console.log("user debut")
           console.log(results)
           let [resu]=results
           res.status(200).json(resu)
+          console.log("user debut fin")
         }
       })
     }else {
@@ -285,18 +198,21 @@ app.get('/demandeurs/:email', (req, res) => {
   })
 })
 
+
+
+//AFFICHER LES UTILISATEURS
 app.get ('/users', async (req, res) => {
   let {refUsers} = req.params;
 
-  let requet1 = 'SELECT *FROM demandeurs';
-  let requet2 = 'SELECT *FROM investisseurs';
+  let requet1 = 'SELECT *FROM agro.demandeurs';
+  let requet2 = 'SELECT *FROM agro.investisseurs';
 
   // Récupération des données de la base de données
-  connexion.query(requet1, (error, results) => {
+  connexion.query(requet2, (error, results) => {
     if (error) {
       console.log(error)
       res.status(500).json({message : 'erreur de récuperation des données'})
-    } else {
+    }else {
       console.log(results)
       let [resu]=results
       res.status(200).json(results)
@@ -304,6 +220,8 @@ app.get ('/users', async (req, res) => {
 
   });
 })
+
+
 
 
 // MISE A JOURS DES UTILISATEURS
@@ -332,122 +250,6 @@ app.put('/update', async (req, res) => {
       }
     });
 });
-
-
-// INVESTISSEURS
-
-
-
-//   if (!email || !passwordLogin) {
-//     console.log('Veillez entrer votre mail et mdp');
-//   }else{
-//     connexion.query('SELECT * FROM demandeurs', [email], (error, results, fields) => {
-//       if (error) {
-//         console.log('Erreur de récupération des données des utilisateurs :', error);
-//         res.status(500).json({ message: 'Erreur de récupération des données des utilisateurs' });
-//       } else {
-//         console.log('Liste des utilisateurs :', results);
-//         res.status(200).json({ users: results });
-//       }
-//     });
-//   }
-// })
-    // Recherche de l'utilisateur dans la base de données
-//     connexion.query('SELECT * FROM demandeurs WHERE mail = ?', [email], (error, results, fields) => {
-//       if (error) {
-//         console.log('Erreur de récupération des données de l\'utilisateur :', error);
-//         res.status(500).json({ message: 'Erreur de récupération des données de l\'utilisateur' });
-//       } else if (results.length === 0) {
-//         // Utilisateur non trouvé, envoi d'une erreur
-//         console.log("L'utilisateur n'existe pas");
-//         res.status(404).json({ message: "L'utilisateur n'existe pas" });
-//       } else {
-//         const user = results[0];
-//         // Vérification du mot de passe
-//         console.log(passwordLogin + ' type : ' + typeof(passwordLogin));
-//         console.log(user.nom + ' hash : ' + user.password);
-  
-//         new Promise((resolve, reject) => {
-//           bcrypt.compare(passwordLogin, user.password, (error, result) => {
-//             if (error) {
-//               reject(error);
-//             } else {
-//               resolve(result);
-//             }
-//           });
-//         })
-//         .then((result) => {
-//           if (result) {
-//             // Connexion réussie, génération du token d'authentification
-//             const token = jwt.sign({ email: user.mail }, secret, { expiresIn: '1h' });
-  
-//             // Envoi de la réponse avec le token d'authentification
-//             console.log('Connexion réussie');
-//             res.status(200).json({
-//               message: 'Connexion réussie',
-//               token: token,
-//               username: user.username,
-//             });
-//           } else {
-//             // Mot de passe incorrect, envoi d'une erreur
-//             console.log('Mot de passe incorrect');
-//             res.status(401).json({ message: 'Mot de passe incorrect' });
-//           }
-//         })
-//         .catch((error) => {
-//           console.log('Erreur de comparaison de mots de passe :', error);
-//           res.status(500).json({ message: 'Erreur de comparaison de mots de passe' });
-//         });
-//       }
-//     });
-//   }
-
-// });
-
-
-  // app.post('/login', async (req, res) => {
-  //   const email = req.body.email;
-  //   const password = req.body.password;
-  
-  //   if (!email || !password) {
-  //     return res.status(400).json({ message: 'Email et mot de passe requis' });
-  //   }
-  
-  //   try {
-  //     connexion.query('SELECT * FROM demandeurs WHERE mail = ?', [email], async (error, results, fields) => {
-  //       if (error) {
-  //         console.log('Erreur de récupération des données de l\'utilisateur :', error);
-  //         res.status(500).json({ message: 'Erreur de récupération des données de l\'utilisateur' });
-  //       } else if (results.length === 0) {
-  //         // Utilisateur non trouvé, envoi d'une erreur
-  //         console.log("L'utilisateur n'existe pas");
-  //         res.status(404).json({ message: "L'utilisateur n'existe pas" });
-  //       } else {
-  //         const user = results[0];
-  //         // ...
-  //         const passwordMatch = await bcrypt.compare(password, user.password);
-      
-  //         if (!passwordMatch) {
-  //           return res.status(401).json({ message: 'Mot de passe incorrect' });
-  //         }
-      
-  //         const token = jwt.sign({ email: user.mail }, secret, { expiresIn: '1h' });
-      
-  //         return res.status(200).json({
-  //           message: 'Connexion réussie',
-  //           token: token,
-  //           username: user.username,
-  //         });
-  //       }
-  //     })
-      
-  
-  //   } catch (error) {
-  //     console.log('Erreur de récupération des données de l\'utilisateur :', error);
-  //     return res.status(500).json({ message: 'Erreur de récupération des données de l\'utilisateur' });
-  //   }
-  // });
-
 
 
 
