@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 
 const authenticationMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
+  console.log(authHeader);
   //   verifying if header or token are provided in sigin request
   if (!authHeader || !authHeader.startsWith("Bearer")) {
     throw new UnauthenticatedError("No token found, please provide token");

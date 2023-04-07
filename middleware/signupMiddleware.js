@@ -14,13 +14,14 @@ const signUpMiddleware = async (req, res, next) => {
       } else {
         if (results.length > 0) {
           return res
-            .status(StatusCodes.CONFLICT)
+            .status(StatusCodes.BAD_REQUEST)
             .json({ msg: `user with email ${email} already exists  ` });
         } else {
           const salt = await bcrypt.genSalt(10);
+          // console.log(salt);
           const hashedPassword = await bcrypt.hash(password, salt);
           const token = jwt.sign({ name, email }, process.env.JWT_SECRET, {
-            expiresIn: process.env.JWT_LIFETIME,
+            expiresIn: process.env.JWT_EXPIRES_IN,
           });
           req.password = hashedPassword;
           req.token = token;
