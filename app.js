@@ -2,6 +2,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const cors = require("cors")
 // const nodemailer = require('nodemailer');
 const app = express();
 
@@ -25,9 +26,10 @@ const PORT = 5000 || process.env.PORT;
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(cors());
 //VERIFICATION CONNEXION A LA BASE DE DONNEE
 db.connect((error) => {
-    if (error) throw error;
+    if (error) throw error; 
 });
 
 //VERIFICATION DU TOKEN
@@ -74,7 +76,7 @@ app.post("/passwordUpdate", verificationToken, udpdateInfo.password);
 
 // GESTION DES ADMINISTRATEURS
 // AFFICHER LES ADMINISTRATEURS
-app.get('/adminGestion', verificationToken, adminDisplay);
+app.get('/adminGestion', adminDisplay);
 
 // RECHERCHE ADMINISTRATEUR AVEC NOM OU PRENOM
 app.post("/adminSearch", verificationToken, adminSearch);
@@ -85,7 +87,7 @@ app.post("/adminDelete/:id", verificationToken, adminDelete);
 //GESTION DES UTILISATEURS
     // POUR LE USERS
     // AFFICHER USERS
-    app.get('/usersGestion', verificationToken, displayUsers.users);
+    app.get('/usersGestion', displayUsers.users);
 
     // RECHERCHE UTILISATEUR AVEC NOM OU PRENOM
     app.post("/userSearch", verificationToken, searchUsers.users);

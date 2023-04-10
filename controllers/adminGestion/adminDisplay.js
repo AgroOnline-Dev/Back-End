@@ -2,7 +2,7 @@
 const db = require("../../model/db");
 
 const adminDisplay = (req, res) => {
-    const id = req.user.id;
+    
 
     // SELECTIONNER TOUS LES ADMINISTRATEURS
     db.query("SELECT * FROM agro.admin", (error, results) => {
