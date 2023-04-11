@@ -25,7 +25,7 @@ const signin = async (req, res) => {
   const decodedInfo = req.user;
   const luckyNumber = Math.floor(Math.random() * 100);
   res.status(StatusCodes.OK).json({
-    msg: `Hello, ${decodedInfo.name}`,
+    msg: decodedInfo,
     secret: `Here is your authorisez data, lucky number ${luckyNumber}`,
   });
 };

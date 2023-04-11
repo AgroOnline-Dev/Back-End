@@ -1,15 +1,20 @@
 //imports
 const express = require("express");
-// const db = require("./models/database");
+const db = require("./models/database");
 const productsRoutes = require("./routes/products");
 const usersRoutes = require("./routes/users");
 const sellersRoutes = require("./routes/sellers");
+const usersNewRoutes = require("./routes/usersNewRoutes");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cookies = require("cookie-parser");
 const proxy = require("http-proxy-middleware");
 const cors = require("cors");
 const session = require("express-session");
+const passport = require("passport");
+const authRoutes = require("./routes/auth");
+const bcrypt = require("bcrypt");
+
 //initialisation
 const app = express();
 
@@ -30,22 +35,31 @@ app.use(
 );
 app.use(
   session({
-    key: "sessionId",
-    secret: "SessionSecret",
+    key: "userId",
+    secret: "subscribe",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      expires: new Date("01 12 2025"),
+      expires: 60 * 60 * 24,
     },
   })
 );
 
+app.use(passport.initialize());
+app.use(passport.session());
 //configuration des routes
 // products routes
+const secretKey = "votre_clé_secrete_jwt";
+
+// Requête à la
+
+// Route protégée nécessitant une authentification
+
 app.use("/", productsRoutes);
 app.use("/add-product", express.static("uploads/images"));
 // users routes
 app.use("/users", usersRoutes);
+app.use("/news-r", usersNewRoutes);
 // sellers routes
 app.use("/sellers", sellersRoutes);
 
@@ -107,7 +121,7 @@ io.on("connection", (socket) => {
         console.log(err);
       } else {
         if (result) {
-          console.log("Msg saved");
+          console.log("Ms-g saved");
           io.to(message.room).emit("newMsgReceived", {
             id: new Date().getTime(),
             ...message,
@@ -200,7 +214,7 @@ require("express-async-errors");
 // const http = require("http");
 
 // COMPOSANT
-const db = require("./model/db");
+
 const registerAdmin = require("./controllers/connectivite/registerAdmin");
 const loginAdmin = require("./controllers/connectivite/loginAdmin");
 const profile = require("./controllers/profile");

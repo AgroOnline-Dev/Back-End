@@ -20,7 +20,7 @@ const register = (req, res) => {
     password,
     passwordConfirm,
   } = req.body;
-  const profil = `http://localhost:5000/sing-up/${req.file.filename}`;
+  const profil = `http://lochost:5000/sing-up/${req.file.filename}`;
   if (!email) {
     return res
       .status(400)
@@ -63,7 +63,6 @@ const register = (req, res) => {
       }
 
       let hashedPassword = await bcrypt.hash(password, 10);
-
       db.query(
         "INSERT INTO users SET ?",
         {
@@ -84,7 +83,7 @@ const register = (req, res) => {
   );
 };
 
-const loginUser = async (req, res) => {
+const loginUser = (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email) {
@@ -100,40 +99,35 @@ const loginUser = async (req, res) => {
         message: "Please Provide a password",
       });
     }
-    db.query(
-      "SELECT * FROM users WHERE email = ?",
-      [email],
-      async (err, results) => {
-        if (err) throw err;
-        if (
-          !results ||
-          !(await bcrypt.compare(password, results[0].password))
-        ) {
-          res.send({ status: 0, message: "Email or Password is incorrect" });
-        } else {
-          /*const id = results[0].id_users;
-          const name = results[0].name;
-          const token = jwt.sign({ id }, process.env.JWT_SECRET, {
-            expiresIn: process.env.JWT_EXPIRES_IN,
-          });
-          const cookieOptions = {
-            // expires works the same as the maxAge
-            expiresIn: new Date("01 12 2025"),
+    db.query("SELECT * FROM users WHERE email = ?", [email], (err, results) => {
+      if (err) throw err;
+      if (!results || !bcrypt.compare(password, results[0].password)) {
+        res.send({ status: 0, message: "Email or Password is incorrect" });
+      } else {
+        const id = results[0].id_users;
+        const email = results[0].email;
+        token = jwt.sign({ id, email }, process.env.JWT_SECRET, {
+          expiresIn: process.env.JWT_EXPIRES * 60,
+        });
+        res.cookie("user-token", token, {
+          maxAge: 60 * 60 * 24 * 30 * 1000,
+          httpOnly: true,
+        });
+        res.json({
+          status: 1,
+          message: `${results[0].name} est connecté`,
+        });
+        // req.session.user = results[0];
+        // console.log(req.session.user);
+        // const cookieOptions = { expiresIn: new Date("01 12 2024") };
+        // res.cookie("user_cookie", results[0], cookieOptions);
+        // res.status(201).send({
+        //   status: 1,
+        //   message: "welcome mr" + req.session.user.name,
+        //   user: req.session.user.name,
+        // });
 
-            httpOnly: true,
-            sameSite: "lax",
-          };
-          const nameCookie = "UseLog";
-          res.cookie(name, token, cookieOptions);*/
-          req.session.user = results[0];
-          console.log(req.session.user);
-          res.status(201).send({
-            status: 1,
-            message: "welcome mr" + req.session.user.name,
-            user: req.session.user.name,
-          });
-
-          /* const cookieOptions = {
+        /* const cookieOptions = {
                     maxAge: 5000,
                     // expires works the same as the maxAge
                     expires: new Date('01 12 2025'),
@@ -141,11 +135,10 @@ const loginUser = async (req, res) => {
                     httpOnly: true,
                     sameSite: 'lax'
                 };*/
-          //res.cookie('userSave', token, cookieOptions);
-          // res.status(200).send({ message: 'User saved'});
-        }
+        //res.cookie('userSave', token, cookieOptions);
+        // res.status(200).send({ message: 'User saved'});
       }
-    );
+    });
   } catch (err) {
     console.log(err);
   }
@@ -224,6 +217,28 @@ const isAuthenticated = (req, res) => {
     user: req.session.user.name,
     userP: req.session.user.profil,
   });
+};
+const verificationToken = (req, res, next) => {
+  const token = req.cookies["user-token"];
+
+  if (!token) {
+    console.log("il n y'a pas le cookie");
+    res.json({ status: 0, erreur: `Vous n'êtes pas connectés` });
+    // res.redirect("/")
+  } else {
+    console.log("il y'a le cookie");
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        console.log(err);
+        res.clearCookie("user-token");
+        // res.json({ status: "erreur", erreur: `n'a pas réussi à s'authentifier` });
+      } else {
+        req.user = decoded;
+        console.log(req.user);
+        next();
+      }
+    });
+  }
 };
 
 const getUserById = (req, res) => {
@@ -345,4 +360,5 @@ module.exports = {
   isAuthenticated,
   getUserById,
   updateUser,
+  verificationToken,
 };

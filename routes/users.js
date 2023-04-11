@@ -9,5 +9,5 @@ router.post("/login", userController.loginUser);
 router.get("/logout", userController.logOut);
 router.get("/user-by-id", userController.getUserById);
 router.put("/update-user", userController.updateUser);
-router.get("/login", userController.isAuthenticated);
+router.get("/login", userController.verificationToken);
 module.exports = router;
